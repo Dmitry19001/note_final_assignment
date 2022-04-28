@@ -1,7 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from "react-native"
-import {screens} from "./"
 
-export default ({ navigation }) => {
+export default () => {
     return (
     <View style={{alignSelf:'stretch', justifyContent: 'space-around'}}>
         <TextInput multiline={true} placeholder="Enter your note here..." style={styles.editorField}></TextInput>
