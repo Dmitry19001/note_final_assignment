@@ -1,33 +1,55 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native";
 import Icon from "react-native-feather1s";
-import {noteItem} from '../components/note_item'
+import {NoteItem} from '../components/noteItem'
 import database from "../utils/data";
 
-export default ({navigation}) => {
+export default ({navigation, route}) => {
     let title = '';
     let text = '';
 
     const saveToDatabase = () => {
-        var id = Math.random().toString(12);
-        id = id.substring(2, id.length - 2);
+        if (route != undefined){
+            //EDIT scenario
+            console.log(route.params);
 
-        var curDate = new Date();
+            var id = route.params.id;
+            var created = route.params.createdDate;
+            
+            //Checking if title needs to be updated
+            title = title.length < 1? route.params.title : title;
+            //Checking if text needs to be updated
+            text = text.length < 1? route.params.text : text;
 
-        let nItem = new noteItem(id, title, text, `${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`)
-        
-        alert(`[${nItem.id}]${nItem.name} ${nItem.text}`);
-        console.log(database.dataArray);
-        if (database.dataArray != undefined){
-            database.dataArray.push(nItem);
-            console.log('new item added from editor!');
-            return;
+            //TODO: replacing old noteItem with new one!
+
+            console.log(`route found:[${id}] title: ${title} text:${text} created: ${created}`);
         }
-        console.log('Something wrong!');
-        
+        else{
+            //ADD NEW scenario
+            var id = Math.random().toString(12);
+            id = id.substring(2, id.length - 2);
+    
+            var curDate = new Date();
+    
+            let nItem = new NoteItem(id, title, text, `${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`)
+            
+            alert(`[${nItem.id}]${nItem.name} ${nItem.text}`);
+            console.log(database.dataArray);
+            if (true){
+    
+                console.log('new item added from editor!');
+    
+                navigation.navigate("Container");
+                return;
+            }
+            console.log('Something wrong!');
+        }
+
     }
 
     return (
     <View style={styles.item}>
+        {console.log(route.params)}
         <View style={styles.note_toolbar}>
             <TouchableOpacity style={styles.tool_button} key="editButton" onPress={() => saveToDatabase()}>
                 <Icon name="save" size={22} color="black" thin={false}/>
@@ -40,12 +62,14 @@ export default ({navigation}) => {
             placeholder="Enter your title here..." 
             style={styles.title} 
             onChangeText={(value) => title = value}
+            defaultValue={route.params.title}
         />
         <TextInput 
             multiline={true} 
             placeholder="Enter your note here..." 
             style={styles.editorField} 
             onChangeText={(value) => text = value}
+            defaultValue={route.params.text}
         />
     </View>
     );

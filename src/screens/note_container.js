@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {noteItem} from '../components/note_item';
+import {NoteItem} from '../components/noteItem';
 import {TextInput, TouchableOpacity, Image, SafeAreaView, View, VirtualizedList, StyleSheet, Text } from 'react-native';
 import addIcon from "../../assets/new_note_icon_white.png";
 import Icon from "react-native-feather1s";
 
-const App = () => {
+const App = ({navigation}) => {
 
   const [DATA, setDATA] = useState([]);
   
@@ -17,13 +17,14 @@ const App = () => {
     id = id.substring(2, id.length - 2);
 
     var curDate = new Date();
+    var createdDate = `${curDate.getHours()}:${curDate.getMinutes()} ${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`
 
-    var newNoteItem = new noteItem(id, `Note #${DATA.length+1}`, lorem, `${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`);
+    var newNoteItem = new NoteItem(id, `Note #${DATA.length+1}`, lorem, createdDate);
     var newData = [...DATA , newNoteItem];
 
     setDATA(newData);
 
-    console.log(`Added: ${newNoteItem.id}`);
+    console.log(`Added: ${newNoteItem.id} at ${newNoteItem.createdDate}`);
   } 
   
   const getItem = (data, index) => ({
@@ -31,22 +32,13 @@ const App = () => {
     key: data[index].id,
     title: data[index].name,
     text: data[index].text,
-    dateCreated: data[index].dateCreated
+    createdDate: data[index].createdDate
   });
   
   const getItemCount = (data) => data.length;
   
   const editSave = (item) => {
-    if (item.isBeingEdited){
-      item.EditingMode = false;
-      setEditing(false);
-      console.log("Edit disabled");
-      return;
-    }
-    item.EditingMode = true;
-    setEditing(true);
-    console.log("Edit enabled");
-    return;
+    navigation.navigate('Editor', item)
   };
 
   const deleteItem = (item) => {
@@ -77,14 +69,13 @@ const App = () => {
       <Text type="text" style={styles.title} editable={item.isBeingEdited}>{item.title}</Text>
       <Text style={styles.text} editable={item.isBeingEdited}>{item.text}</Text>
       
-      <Text style={styles.dateCreated}>{item.dateCreated}</Text>
+      <Text style={styles.createdDate}>Created {item.createdDate}</Text>
 
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{DATA.length}</Text>
       <VirtualizedList
         style={{paddingBottom: 70}}
         data={DATA}
@@ -94,7 +85,7 @@ const App = () => {
         getItemCount={getItemCount}
         getItem={getItem}
       />
-      <TouchableOpacity style={styles.addButton} onPress={() => {addItem()}} >
+      <TouchableOpacity style={styles.addButton} onPress={() => {/*navigation.navigate('Editor')*/ addItem()}} >
         <Image source={addIcon} style={{ width: 60, height: 60 }}/>
       </TouchableOpacity>
     </SafeAreaView>
@@ -134,10 +125,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     height: '70%'
   },
-  dateCreated: {
-    fontSize: 10,
+  createdDate: {
+    fontSize: 12,
+    opacity: 0.75,
     color: '#545454',
-    right: 10
+    textAlign: 'right',
   },
   note_toolbar: {
     flex: 1,
