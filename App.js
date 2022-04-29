@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import {screens} from './src/screens';
+import { configureStore } from '@reduxjs/toolkit'
 
 const Stack = createNativeStackNavigator();
 
