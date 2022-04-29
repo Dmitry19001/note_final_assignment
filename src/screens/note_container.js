@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {noteItem} from '../components/note_item'
+import {noteItem} from '../components/note_item';
 import {TextInput, TouchableOpacity, Image, SafeAreaView, View, VirtualizedList, StyleSheet, Text } from 'react-native';
 import addIcon from "../../assets/new_note_icon_white.png";
 import Icon from "react-native-feather1s";
@@ -10,7 +10,7 @@ const App = () => {
   
   //const [exampleState, setExampleState] = useState(DATA);
   const [isEditing, setEditing] = useState(true);
-  // const lorem = "Amet officia voluptate nulla occaecat anim officia ex in. Occaecat ipsum Lorem cupidatat laboris enim ut officia deserunt. Commodo quis proident cupidatat in.";
+  const lorem = "Amet officia voluptate nulla occaecat anim officia ex in. Occaecat ipsum Lorem cupidatat laboris enim ut officia deserunt. Commodo quis proident cupidatat in.";
 
   const addItem = () => {
     var id = Math.random().toString(12);
@@ -18,13 +18,12 @@ const App = () => {
 
     var curDate = new Date();
 
-    var newNoteItem = new noteItem(id, "", "", `${curDate.getDate()}.${curDate.getMonth()}.${curDate.getFullYear()}`);
-    var newData = [...DATA , newNoteItem];;
+    var newNoteItem = new noteItem(id, `Note #${DATA.length+1}`, lorem, `${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`);
+    var newData = [...DATA , newNoteItem];
 
     setDATA(newData);
 
-    console.log("added new note");
-    console.log(newNoteItem);
+    console.log(`Added: ${newNoteItem.id}`);
   } 
   
   const getItem = (data, index) => ({
@@ -37,57 +36,60 @@ const App = () => {
   
   const getItemCount = (data) => data.length;
   
-  const editSave = () => {
-    if (isEditing){
+  const editSave = (item) => {
+    if (item.isBeingEdited){
+      item.EditingMode = false;
       setEditing(false);
       console.log("Edit disabled");
       return;
     }
+    item.EditingMode = true;
     setEditing(true);
     console.log("Edit enabled");
     return;
   };
 
-  const deleteItem = (id) => {
-    console.log("deleting: " + id)
-    var newData = DATA.splice(DATA.find((entry) => entry.id === id).index);
-    setDATA(newData);
-    console.log(newData);
+  const deleteItem = (item) => {
+    var foundIndex = DATA.findIndex((entry) => (entry.id === item.id));
+
+    if (foundIndex != undefined) { 
+      var newData = [...DATA];
+      newData.splice(foundIndex, 1);
+
+      setDATA(newData);
+    }
+    else{
+      console.log('should be deleted!')
+    }
   }
 
-  const Item = ({ id, title, text, dateCreated }) => (  
-    <View style={styles.item} onClick={() => console.log(`item: ${title} clicked`)}>
+  const Item = ({ item }) => (  
+    <View style={styles.item}>
       <View style={styles.note_toolbar}>
-        <TouchableOpacity style={styles.tool_button} key="editButton" onPress={() => editSave()}>
-          { !isEditing &&
-            <Icon name="save" size={22} color="black" thin={false}/>
-          }
-          
-          { isEditing &&
+        <TouchableOpacity style={styles.tool_button} key="editButton" onPress={() => editSave(item)}>
             <Icon name="edit-2" size={22} color="black" thin={false}/>
-          }
-          
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tool_button} key="deleteButton" onPress={() => deleteItem(id)}>
+        <TouchableOpacity style={styles.tool_button} key="deleteButton" onPress={() => deleteItem(item)}>
           <Icon name="trash-2" size={22} color="red" thin={false}/>
         </TouchableOpacity>
       </View>
 
-      <TextInput style={styles.title} placeholder="Enter a title here...">{title}</TextInput>
-      <TextInput multiline={true} style={styles.text}  placeholder="Enter a text here...">{text}</TextInput>
-
-      <Text style={styles.dateCreated}>{dateCreated}</Text>
+      <Text type="text" style={styles.title} editable={item.isBeingEdited}>{item.title}</Text>
+      <Text style={styles.text} editable={item.isBeingEdited}>{item.text}</Text>
+      
+      <Text style={styles.dateCreated}>{item.dateCreated}</Text>
 
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text>{DATA.length}</Text>
       <VirtualizedList
         style={{paddingBottom: 70}}
         data={DATA}
         initialNumToRender={4}
-        renderItem={({ item }) => <Item id={item.id} title={item.title} text={item.text} dateCreated={item.dateCreated}/>}
+        renderItem={({ item }) => <Item item={item}/>}
         keyExtractor={item => item.key}
         getItemCount={getItemCount}
         getItem={getItem}
@@ -129,7 +131,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    paddingTop: 10
+    marginTop: 15,
+    height: '70%'
   },
   dateCreated: {
     fontSize: 10,
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
   },
   tool_button: {
     margin: 2,
-    opacity: 0.75,
+    opacity: 1,
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 100,
