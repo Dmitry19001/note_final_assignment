@@ -3,6 +3,8 @@ import Icon from "react-native-feather1s";
 import {NoteItem} from '../components/noteItem'
 import database from "../utils/data";
 
+import i18n from '../i18n';
+
 export default ({navigation, route}) => {
     let title = '';
     let text = '';

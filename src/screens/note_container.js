@@ -4,12 +4,13 @@ import {TextInput, TouchableOpacity, Image, SafeAreaView, View, VirtualizedList,
 import addIcon from "../../assets/new_note_icon_white.png";
 import Icon from "react-native-feather1s";
 
+import i18n from '../i18n';
+
 const App = ({navigation}) => {
 
   const [DATA, setDATA] = useState([]);
   
   //const [exampleState, setExampleState] = useState(DATA);
-  const [isEditing, setEditing] = useState(true);
   const lorem = "Amet officia voluptate nulla occaecat anim officia ex in. Occaecat ipsum Lorem cupidatat laboris enim ut officia deserunt. Commodo quis proident cupidatat in.";
 
   const addItem = () => {
@@ -69,7 +70,7 @@ const App = ({navigation}) => {
       <Text type="text" style={styles.title} editable={item.isBeingEdited}>{item.title}</Text>
       <Text style={styles.text} editable={item.isBeingEdited}>{item.text}</Text>
       
-      <Text style={styles.createdDate}>Created {item.createdDate}</Text>
+      <Text style={styles.createdDate}>{i18n.t('note_container.date_created')} {item.createdDate}</Text>
 
     </View>
   );

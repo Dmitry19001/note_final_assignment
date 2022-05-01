@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import {screens} from './src/screens';
 import { configureStore } from '@reduxjs/toolkit';
+import i18n from './src/i18n';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         { 
-          screens.map((s) => <Stack.Screen name ={s.name} key={s.name} component={s.component}/>)
+          screens.map((s) => <Stack.Screen name ={s.name} key={s.name} component={s.component} options = {{title: s.title}}/>)
         }
       </Stack.Navigator>
     </NavigationContainer>
