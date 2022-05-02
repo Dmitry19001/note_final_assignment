@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import { useNavigationState } from "@react-navigation/core";
 
 import i18n from '../i18n';
-import colors from '../config.js/colors';
+import colors from '../config/colors';
 import { loadSettings } from '../storage/settingsStorage';
 
 class StartScreen extends React.Component {
@@ -17,12 +17,12 @@ class StartScreen extends React.Component {
         const initialState = await loadSettings();
         i18n.locale = initialState.locale;
         this.setState(initialState);
-        console.log(`Localization loaded: ${i18n.locale}`);
+        //console.log(`Localization loaded: ${i18n.locale}`);
     }
 
     render(){
         const {navigation} = this.props.props;
-        console.log(this.props.props);
+        //console.log(this.props.props);
         return (
             <View>
                 {/* {screens.map((s) => <Button key={s.name} title={s.name} onPress={() => navigation.navigate(s.name)}></Button>)} */}

@@ -5,7 +5,7 @@ import { useNavigationState } from "@react-navigation/core";
 import Icon from "react-native-feather1s";
 
 import i18n from '../i18n';
-import colors from '../config.js/colors';
+import colors from '../config/colors';
 import addIcon from "../../assets/new_note_icon_white.png";
 
 class NoteContainer extends React.Component {
@@ -17,9 +17,19 @@ class NoteContainer extends React.Component {
     this.state = {notes: []}
   }
 
-  async componentDidMount(){
-    //const initialState = await loadSettings();
-    //this.setState(initialState);
+  componentDidUpdate(prevProps, prevState){
+    let {route} = this.props.props;
+    let {navigation} = this.props.props;
+    if (route.params != undefined){
+      //console.log(route.params);
+      let notes = route.params.notes !== undefined ? route.params.notes : [];
+      if (notes.length > 0){
+        //console.log('Got new data');
+        //console.log(notes);  
+        navigation.setParams({notes: []});
+        this.state.notes = notes;
+      }
+    }
   }
 
   logDebug() {
@@ -40,8 +50,8 @@ class NoteContainer extends React.Component {
     var newData = [...this.state.notes , newNoteItem];
 
     //setDATA(newData);
-    this.state.notes = newData;
-    console.log(`Added: ${newNoteItem.id} at ${newNoteItem.createdDate}`);
+    this.setState({notes: newData});
+    //console.log(`Added: ${newNoteItem.id} at ${newNoteItem.createdDate}`);
   }
 
   getItemCount = (data) => data.length;
@@ -59,13 +69,14 @@ class NoteContainer extends React.Component {
   };
 
   deleteItem = (item) => {
-    var foundIndex = DATA.findIndex((entry) => (entry.id === item.id));
+    var foundIndex = this.state.notes.findIndex((entry) => (entry.id === item.id));
 
     if (foundIndex != undefined) { 
       var newData = [...this.state.notes];
       newData.splice(foundIndex, 1);
 
-      setDATA(newData);
+      this.setState({notes: newData});
+      //console.log(this.state.notes);
     }
     else{
       console.log('should be deleted!')
@@ -75,10 +86,10 @@ class NoteContainer extends React.Component {
   Item = ({ item }) => (  
     <View style={styles.item}>
       <View style={styles.note_toolbar}>
-        <TouchableOpacity style={styles.tool_button} key="editButton" onPress={() => editItem(item)}>
+        <TouchableOpacity style={styles.tool_button} key="editButton" onPress={() => this.editItem(item)}>
             <Icon name="edit-2" size={25} color="black" thin={false}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tool_button} key="deleteButton" onPress={() => deleteItem(item)}>
+        <TouchableOpacity style={styles.tool_button} key="deleteButton" onPress={() => this.deleteItem(item)}>
           <Icon name="trash-2" size={25} color="red" thin={false}/>
         </TouchableOpacity>
       </View>
@@ -101,15 +112,15 @@ class NoteContainer extends React.Component {
           style={{paddingBottom: 70}}
           data={this.state.notes}
           initialNumToRender={4}
-          renderItem={({ item }) => <Item item={item}/>}
+          renderItem={({ item }) => <this.Item item={item}/>}
           keyExtractor={item => item.key}
           getItemCount={this.getItemCount}
           getItem={this.getItem}
         />
         <TouchableOpacity 
           style={styles.addButton}
-          onPress={() => { navigation.navigate('Editor', {notes}) /*this.addItem()*/}}
-          onLongPress={() => this.logDebug()}
+          onPress={() => { navigation.navigate('Editor', {notes: notes})}}
+          onLongPress={() => this.addItem()}
           >
           <Image source={addIcon} style={{ width: 60, height: 60 }}/>
         </TouchableOpacity>

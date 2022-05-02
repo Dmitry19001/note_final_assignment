@@ -3,7 +3,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react
 import Icon from 'react-native-vector-icons/Ionicons';
 import i18n from '../i18n';
 
-import colors from '../config.js/colors';
+import colors from '../config/colors';
 
 class LanguageListItem extends React.Component {
   constructor(props) {

@@ -6,7 +6,7 @@ import { useNavigationState } from "@react-navigation/core";
 import React, {useEffect} from "react";
 
 import i18n from '../i18n';
-import colors from "../config.js/colors";
+import colors from "../config/colors";
 
 class NoteEditor extends React.Component {
 
@@ -39,16 +39,23 @@ class NoteEditor extends React.Component {
             id = id.substring(2, id.length - 2);
     
             var curDate = new Date();
-    
-            let nItem = new NoteItem(id, this.state.title, this.state.text, `${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`)
+            var timeStamp = `${curDate.getHours()}:${curDate.getMinutes()} ${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`;
+            let nItem = new NoteItem(id, this.state.title, this.state.text, timeStamp)
             
-            alert(`[${nItem.id}]${nItem.name} ${nItem.text}`);
+            //alert(`[${nItem.id}]${nItem.name} ${nItem.text}`);
+            
+            var data = route.params.notes !== undefined ? route.params.notes : [];
 
-            if (true){
+            data = [...data, nItem];        
+
+            //console.log("sending data");
+            //console.log(data);
+
+            if (data.length > 0){
     
-                console.log('new item added from editor!');
+                //console.log('items are sent to container!');
     
-                navigation.navigate("Container");
+                navigation.navigate("Container", {notes: data});
                 return;
             }
             console.log('Something wrong!');
@@ -78,14 +85,14 @@ class NoteEditor extends React.Component {
                     placeholder={i18n.t('note_editor.note_title_placeholder')}
                     style={styles.title} 
                     onChangeText={(value) => this.state.title = value}
-                    defaultValue={route.params.title ==! undefined ? route.params.title : ''}
+                    defaultValue={route.params.title !== undefined ? route.params.title : ''}
                 />
                 <TextInput 
                     multiline={true} 
                     placeholder={i18n.t('note_editor.note_text_placeholder')}
                     style={styles.editorField} 
                     onChangeText={(value) => this.state.text = value}
-                    defaultValue={route.params.text ==! undefined ? route.params.text : ''}
+                    defaultValue={route.params.text !== undefined ? route.params.text : ''}
                 />
             </View>
         );

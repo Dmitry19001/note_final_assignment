@@ -9,7 +9,7 @@ from 'react-native';
 
 import { useNavigationState } from "@react-navigation/core";
 
-import colors from '../config.js/colors';
+import colors from '../config/colors';
 import i18n from '../i18n';
 import { loadSettings, saveSettings } from '../storage/settingsStorage';
 
