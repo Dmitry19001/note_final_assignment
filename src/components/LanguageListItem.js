@@ -3,6 +3,8 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react
 import Icon from 'react-native-vector-icons/Ionicons';
 import i18n from '../i18n';
 
+import colors from '../config.js/colors';
+
 class LanguageListItem extends React.Component {
   constructor(props) {
     super(props);
@@ -11,8 +13,6 @@ class LanguageListItem extends React.Component {
   }
 
   handleLocaleChange() {
-    console.log(`Locale pressed: ${this.props.locale}`)
-    
     //Checking if platform android or ios for Alert
     if (Platform.OS === "android" || Platform.OS ==="ios"){
       Alert.alert(
@@ -41,7 +41,6 @@ class LanguageListItem extends React.Component {
       <TouchableOpacity
         style={styles.listItem}
         onPress={() => {this.handleLocaleChange()}}
-        //onPress={() => `)}
       >
         <View style={styles.textWrapper}>
           <Text style={[
@@ -80,13 +79,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: '#434343'
+    color: colors.darkest
   },
   subtitle: {
-    color: '#AAAAAA'
+    color: colors.dark
   },
   active: {
-    color: '#03a87c'
+    color: colors.primary
   }
 });
 

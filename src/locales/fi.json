@@ -1,29 +1,27 @@
 {
-  "appName": "Note - Final Assignment",
+  "appName": "Muistilaput - Final Assignment",
   "navigation": {
-    "home": "Home",
-    "settings": "Settings",
-    "my_notes":"My Notes",
-    "note_editor": "Note Editor",
-    "languages": "Languages"
+    "settings": "Asetukset",
+    "my_notes":"Minun Muistilaput",
+    "note_editor": "Muistiinpanoeditori",
+    "languages": "Kielet"
   },
   "home": {
-    "welcome": "Welcome to %{appName}!"
+    "welcome": "Tervetuloa!"
   },
   "note_container": {
-    "title": "My Notes",
-    "date_created": "Created: "
+    "date_created": "Luotu: "
   },
   "note_editor": {
-    "note_title_placeholder": "Write title here...",
-    "note_text_placeholder": "Write your note here..."
+    "note_title_placeholder": "Kirjoita otsikkoa tähän...",
+    "note_text_placeholder": "Kirjoita muistiinpano tähän..."
   },
   "settings": {
-    "display_language": "Display language"
+    "display_language": "Kieli"
   },
   "language_list": {
-    "change_language": "Change language?",
-    "ok": "Change",
-    "cancel": "Cancel"
+    "change_language": "Vaihdetaanko kieliä?",
+    "ok": "Vaihda",
+    "cancel": "Peruuttaa"
   }
 }

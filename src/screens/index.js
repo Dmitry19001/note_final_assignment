@@ -1,35 +1,29 @@
-import Start from "./note_start";
-import Editor from "./note_editor";
-import Container from "./note_container";
-import Settings from "./note_settings"
-import LanguageSelectorScreen from "./language_selector";
-import i18n from '../i18n';
+import StartScreen from "./StartScreen";
+import Editor from "./EditorScreen";
+import Container from "./NoteContainerScreen";
+import Settings from "./SettingsScreen"
+import LanguageSelectorScreen from "./LanguageSelectionScreen";
 
 export const screens = [
     {
         name: 'Start',
-        component: Start,
-        title: i18n.t('appName')
+        component: StartScreen
     },
     {
         name: 'Editor',
-        component: Editor,
-        title: i18n.t('navigation.note_editor')
+        component: Editor
     },
     {
         name: 'Container',
-        component: Container,
-        title: i18n.t('navigation.my_notes')
+        component: Container
     },
     {
         name: 'Settings',
-        component: Settings,
-        title: i18n.t('navigation.settings')
+        component: Settings
     },
     {
         name: 'Languages',
-        component: LanguageSelectorScreen,
-        title: i18n.t('navigation.languages')
+        component: LanguageSelectorScreen
     },
     // {
     //     name: 'Settings',

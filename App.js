@@ -5,22 +5,26 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import {screens} from './src/screens';
 import { configureStore } from '@reduxjs/toolkit';
 import i18n from './src/i18n';
+import { loadSettings, saveSettings } from './src/storage/settingsStorage';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  return (    
+  return (
     <NavigationContainer>
       <Stack.Navigator>
         { 
-          screens.map((s) => <Stack.Screen name ={s.name} key={s.name} component={s.component} options = {{title: s.title}}/>)
+          screens.map((s) => <Stack.Screen 
+            name ={s.name} 
+            key={s.name} 
+            component={s.component}
+          />)
         }
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
+//options = {{title: s.title}}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

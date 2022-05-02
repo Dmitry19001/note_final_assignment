@@ -1,5 +1,5 @@
 {
-  "appName": "Note - Final Assignment",
+  "appName": "Notes - Final Assignment",
   "navigation": {
     "home": "Home",
     "settings": "Settings",
@@ -11,7 +11,6 @@
     "welcome": "Welcome to %{appName}!"
   },
   "note_container": {
-    "title": "My Notes",
     "date_created": "Created: "
   },
   "note_editor": {

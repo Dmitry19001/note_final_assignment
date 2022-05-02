@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import i18n from '../i18n';
 
 import LanguageListItem from '../components/LanguageListItem';
+import { StackActions } from '@react-navigation/native';
 
 const languages = [
   {
@@ -23,16 +24,13 @@ const languages = [
 ];
 
 class LanguageSelectorScreen extends React.Component {
-  static navigationOptions = {
-    title: i18n.t('settings.display_language')
-  };
+  // static navigationOptions = {
+  //   title: i18n.t('settings.display_language')
+  // };
 
   render() {
     const { navigation } = this.props;
     const { route } = this.props;
-    console.log("Language selector:");
-    console.log(route);
-
     const currentLocale = route.params.currentLocale;
 
     return (
@@ -45,7 +43,7 @@ class LanguageSelectorScreen extends React.Component {
               locale={language.locale}
               name={language.name}
               englishName={language.englishName}
-              onChangeLocale={(locale) => navigation.navigate('Settings', { locale })}
+              onChangeLocale={(locale) => navigation.navigate('Settings', { locale, title: i18n.t('navigation.settings') })}
             />
           ))
         }
