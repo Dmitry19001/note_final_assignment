@@ -1,12 +1,12 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native";
 import Icon from "react-native-feather1s";
 import {NoteItem} from '../components/noteItem'
-import database from "../utils/data";
 import { useNavigationState } from "@react-navigation/core";
 import React, {useEffect} from "react";
 
 import i18n from '../i18n';
 import colors from "../config/colors";
+import timeFormat from "../utils/timeFormat";
 
 class NoteEditor extends React.Component {
 
@@ -17,21 +17,33 @@ class NoteEditor extends React.Component {
     }
 
     saveToDatabase = (navigation, route) => {
-        if (route.params.title != undefined){
+        if (route.params?.item?.title !== undefined){
             //EDIT scenario
+            console.log("edit")
             console.log(route.params);
 
-            var id = route.params.id;
-            var created = route.params.createdDate;
+            var id = route.params.item.id;
+            var created = route.params.item.createdDate;
             
             //Checking if title needs to be updated
-            this.state.title = this.state.title.length < 1? route.params.title : this.state.title;
+            this.state.title = this.state.title.length < 1? route.params.item.title : this.state.title;
             //Checking if text needs to be updated
-            this.state.text = this.state.text.length < 1? route.params.text : this.state.text;
-
+            this.state.text = this.state.text.length < 1? route.params.item.text : this.state.text;
+            
             //TODO: replacing old noteItem with new one!
+            var newItem = new NoteItem(id, this.state.title, this.state.text, created)
+            var data = route.params?.notes !== undefined ? route.params.notes : [];
+            if (data.length > 0){
+                var foundIndex = data.findIndex((entry) => (entry.id === newItem.id));
+                data[foundIndex] = newItem;
 
-            console.log(`route found:[${id}] title: ${this.state.title} text:${this.state.text} created: ${created}`);
+                navigation.navigate("Container", {notes: data});
+                return;
+            }
+            else{
+                alert("ERROR data is empty!");
+            }
+            //console.log(`route found:[${id}] title: ${this.state.title} text:${this.state.text} created: ${created}`);
         }
         else{
             //ADD NEW scenario
@@ -39,21 +51,20 @@ class NoteEditor extends React.Component {
             id = id.substring(2, id.length - 2);
     
             var curDate = new Date();
-            var timeStamp = `${curDate.getHours()}:${curDate.getMinutes()} ${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`;
+            var timeStamp = 
+            `${timeFormat(curDate.getHours())}` 
+            + `:${timeFormat(curDate.getMinutes())}`
+            + ` ${timeFormat(curDate.getDate())}.`
+            + `${timeFormat(curDate.getMonth()+1)}.` 
+            + `${timeFormat(curDate.getFullYear())}`;
+            
             let nItem = new NoteItem(id, this.state.title, this.state.text, timeStamp)
-            
-            //alert(`[${nItem.id}]${nItem.name} ${nItem.text}`);
-            
+                    
             var data = route.params.notes !== undefined ? route.params.notes : [];
 
             data = [...data, nItem];        
 
-            //console.log("sending data");
-            //console.log(data);
-
             if (data.length > 0){
-    
-                //console.log('items are sent to container!');
     
                 navigation.navigate("Container", {notes: data});
                 return;
@@ -85,14 +96,14 @@ class NoteEditor extends React.Component {
                     placeholder={i18n.t('note_editor.note_title_placeholder')}
                     style={styles.title} 
                     onChangeText={(value) => this.state.title = value}
-                    defaultValue={route.params.title !== undefined ? route.params.title : ''}
+                    defaultValue={route.params?.item?.title !== undefined ? route.params.item.title : ''}
                 />
                 <TextInput 
                     multiline={true} 
                     placeholder={i18n.t('note_editor.note_text_placeholder')}
                     style={styles.editorField} 
                     onChangeText={(value) => this.state.text = value}
-                    defaultValue={route.params.text !== undefined ? route.params.text : ''}
+                    defaultValue={route.params?.item?.text !== undefined ? route.params.item.text : ''}
                 />
             </View>
         );

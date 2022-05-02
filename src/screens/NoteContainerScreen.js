@@ -7,6 +7,8 @@ import Icon from "react-native-feather1s";
 import i18n from '../i18n';
 import colors from '../config/colors';
 import addIcon from "../../assets/new_note_icon_white.png";
+import {loadSavedNotes, saveNotes} from "../storage/noteStorage"; 
+import timeFormat from "../utils/timeFormat";
 
 class NoteContainer extends React.Component {
   // const [DATA, setDATA] = useState([]);
@@ -17,19 +19,23 @@ class NoteContainer extends React.Component {
     this.state = {notes: []}
   }
 
+  async componentDidMount(){
+    var initialState = await loadSavedNotes();
+    this.setState(initialState);
+  }
+
   componentDidUpdate(prevProps, prevState){
     let {route} = this.props.props;
     let {navigation} = this.props.props;
+    
     if (route.params != undefined){
-      //console.log(route.params);
       let notes = route.params.notes !== undefined ? route.params.notes : [];
       if (notes.length > 0){
-        //console.log('Got new data');
-        //console.log(notes);  
         navigation.setParams({notes: []});
-        this.state.notes = notes;
+        this.state.notes = notes;   
       }
     }
+    saveNotes({notes: this.state.notes});
   }
 
   logDebug() {
@@ -44,14 +50,17 @@ class NoteContainer extends React.Component {
     id = id.substring(2, id.length - 2);
 
     var curDate = new Date();
-    var createdDate = `${curDate.getHours()}:${curDate.getMinutes()} ${curDate.getDate()}.${curDate.getMonth()+1}.${curDate.getFullYear()}`
+    var timeStamp = 
+    `${timeFormat(curDate.getHours())}` 
+    + `:${timeFormat(curDate.getMinutes())}`
+    + ` ${timeFormat(curDate.getDate())}.`
+    + `${timeFormat(curDate.getMonth()+1)}.` 
+    + `${timeFormat(curDate.getFullYear())}`;
 
-    var newNoteItem = new NoteItem(id, `Note #${this.state.notes.length+1}`, lorem, createdDate);
+    var newNoteItem = new NoteItem(id, `Note #${this.state.notes.length+1}`, lorem, timeStamp);
     var newData = [...this.state.notes , newNoteItem];
 
-    //setDATA(newData);
     this.setState({notes: newData});
-    //console.log(`Added: ${newNoteItem.id} at ${newNoteItem.createdDate}`);
   }
 
   getItemCount = (data) => data.length;
@@ -65,7 +74,8 @@ class NoteContainer extends React.Component {
   });
 
   editItem= (item) => {
-    navigation.navigate('Editor', item)
+    const {navigation} = this.props.props;
+    navigation.navigate('Editor', { notes: this.state.notes , item})
   };
 
   deleteItem = (item) => {
@@ -76,7 +86,7 @@ class NoteContainer extends React.Component {
       newData.splice(foundIndex, 1);
 
       this.setState({notes: newData});
-      //console.log(this.state.notes);
+      saveNotes({notes: this.state.notes});
     }
     else{
       console.log('should be deleted!')
